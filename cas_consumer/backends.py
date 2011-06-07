@@ -3,7 +3,7 @@ from urlparse import urljoin
 
 from django.conf import settings
 
-from django.contrib.auth.models import User, UNUSABLE_PASSWORD
+from django.contrib.auth.models import User
 
 __all__ = ['CASBackend']
 
@@ -13,6 +13,7 @@ cas_login = cas_base + settings.CAS_LOGIN_URL
 cas_validate = cas_base + settings.CAS_VALIDATE_URL
 cas_logout = cas_base + settings.CAS_LOGOUT_URL
 cas_next_default = settings.CAS_NEXT_DEFAULT
+cas_email_callback = settings.CAS_EMAIL_CALLBACK
 
 def _verify_cas1(ticket, service):
     """Verifies CAS 1.0 authentication ticket.
@@ -50,7 +51,7 @@ class CASBackend(object):
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             # user will have an "unusable" password (thanks to James Bennett)
-            user = User.objects.create_user(username, UNUSABLE_PASSWORD)
+            user = User.objects.create_user(username, cas_email_callback(username))
             user.save()
         if settings.CAS_USERINFO_CALLBACK is not None:
             settings.CAS_USERINFO_CALLBACK(user)

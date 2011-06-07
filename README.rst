@@ -45,6 +45,7 @@ SETTINGS
 - *CAS_NEXT_DEFAULT*: URL to redirect to after successful login. Example (default): ``'/'``
 - *CAS_COMPLETELY_LOGOUT*: Boolean. If True, the CAS provider will be notified of logout. Default: True
 - *CAS_REDIRECT_ON_LOGOUT*: URL to redirect to after logout. Example (default): ``'/'``
+- *CAS_EMAIL_CALLBACK* (optional): Python callable that generates an initial email address from a username when creating new user instances (because email address is ``NOT NULL`` in most Django DBs, and often constrained to be unique). Defaults to appending a nonsense email domain to the username.
 - *CAS_USERINFO_CALLBACK* (optional): Python callable that retrieves full name, email, etc from an external source. Default: None
 
 OTHER SETTINGS

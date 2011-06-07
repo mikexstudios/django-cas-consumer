@@ -7,6 +7,7 @@ _DEFAULTS = {
     'CAS_NEXT_DEFAULT': '/',
     'CAS_COMPLETELY_LOGOUT': True,
     'CAS_USERINFO_CALLBACK': None,
+    'CAS_EMAIL_CALLBACK': lambda username: '%s@generated-cas-user.zz' % (username,),
 
     'CAS_SERVICE_LABEL': 'service',
     'CAS_TICKET_LABEL': 'ticket',
