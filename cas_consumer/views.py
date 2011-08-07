@@ -16,8 +16,6 @@ cas_base = settings.CAS_BASE
 cas_login = cas_base + settings.CAS_LOGIN_URL
 cas_validate = cas_base + settings.CAS_VALIDATE_URL
 cas_logout = cas_base + settings.CAS_LOGOUT_URL
-cas_next_default = settings.CAS_NEXT_DEFAULT
-cas_redirect_on_logout = settings.CAS_REDIRECT_ON_LOGOUT
 
 def login(request):
     """ Fairly standard login view.
@@ -25,12 +23,13 @@ def login(request):
         1. Checks request.GET for a service ticket.
         2. If there is NOT a ticket, redirects to the CAS provider's login page.
         3. Otherwise, attempt to authenticate with the backend using the ticket.
-        4. If the backend is able to validate the ticket, then the user is logged in and redirected to *CAS_NEXT_DEFAULT*.
+        4. If the backend is able to validate the ticket, then the user is
+           logged in and redirected to *CAS_NEXT_DEFAULT*.
         5. Otherwise, the process fails and displays an error message.
 
     """
     ticket = request.GET.get(settings.CAS_TICKET_LABEL, None)
-    next = request.GET.get('next_page', cas_next_default)
+    next = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
 
     #If CAS_SERVICE setting is not set, automatically set the service url based
     #on request host. Since we don't provide a location, it will automatically
@@ -54,12 +53,12 @@ def login(request):
         messages.error(request, 'Error authenticating with CAS.')
         return redirect(next)
 
-def logout(request, next_page=cas_redirect_on_logout):
-    """ Logs the current user out. If *CAS_COMPLETELY_LOGOUT* is true, redirect to the provider's logout page,
-        which will redirect to ``next_page``.
+def logout(request, next_page = settings.CAS_REDIRECT_ON_LOGOUT):
+    """ Logs the current user out. If *CAS_COMPLETELY_LOGOUT* is true, redirect
+    to the provider's logout page, which will redirect to ``next_page``.
 
     """
     auth_logout(request)
     if settings.CAS_COMPLETELY_LOGOUT:
         return HttpResponseRedirect('%s?url=%s' % (cas_logout, next_page))
-    return HttpResponseRedirect(cas_redirect_on_logout)
+    return HttpResponseRedirect(next_page)
