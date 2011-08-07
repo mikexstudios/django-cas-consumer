@@ -1,5 +1,4 @@
 from urllib import urlencode, urlopen
-from urlparse import urljoin
 
 from django.conf import settings
 
@@ -8,9 +7,7 @@ from django.contrib.auth.models import User
 __all__ = ['CASBackend']
 
 cas_base = settings.CAS_BASE
-cas_login = cas_base + settings.CAS_LOGIN_URL
 cas_validate = cas_base + settings.CAS_VALIDATE_URL
-cas_logout = cas_base + settings.CAS_LOGOUT_URL
 cas_email_callback = settings.CAS_EMAIL_CALLBACK
 
 def _verify_cas1(ticket, service):

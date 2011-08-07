@@ -1,12 +1,6 @@
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response, get_list_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from django.core.exceptions import SuspiciousOperation
-from django.template import RequestContext
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
 
@@ -14,7 +8,6 @@ __all__ = ['login', 'logout',]
 
 cas_base = settings.CAS_BASE
 cas_login = cas_base + settings.CAS_LOGIN_URL
-cas_validate = cas_base + settings.CAS_VALIDATE_URL
 cas_logout = cas_base + settings.CAS_LOGOUT_URL
 
 def login(request):
@@ -42,13 +35,13 @@ def login(request):
         url = cas_login + '?'
         raw_params = ['%s=%s' % (key, value) for key, value in params.items()]
         url += '&'.join(raw_params)
-        return HttpResponseRedirect(url)
+        return redirect(url)
     user = authenticate(service=service, ticket=ticket)
     if user is not None:
         auth_login(request, user)
         name = user.first_name or user.username
         messages.success(request, 'Login successful.')
-        return HttpResponseRedirect(next)
+        return redirect(next)
     else:
         messages.error(request, 'Error authenticating with CAS.')
         return redirect(next)
@@ -60,5 +53,5 @@ def logout(request, next_page = settings.CAS_REDIRECT_ON_LOGOUT):
     """
     auth_logout(request)
     if settings.CAS_COMPLETELY_LOGOUT:
-        return HttpResponseRedirect('%s?url=%s' % (cas_logout, next_page))
-    return HttpResponseRedirect(next_page)
+        return redirect('%s?url=%s' % (cas_logout, next_page))
+    return redirect(next_page)
