@@ -42,7 +42,6 @@ SETTINGS
 
 - *CAS_BASE*: The base URL of the CAS provider. Example: ``'http://provider.com/cas/'``. No default.
 - *CAS_SERVICE*: The "service" URL to report to the provider. Example: ``'http://example.com/cas/login/'``. Default: ``'http://yourhost.com/cas/login/'``. We autodetect your host and login url.
-- *CAS_NEXT_DEFAULT*: URL to redirect to after successful login. Example (default): ``'/'``
 - *CAS_COMPLETELY_LOGOUT*: Boolean. If True, the CAS provider will be notified of logout. Default: True
 - *CAS_REDIRECT_ON_LOGOUT*: URL to redirect to after logout. Example (default): ``'/'``
 - *CAS_EMAIL_CALLBACK* (optional): Python callable that generates an initial email address from a username when creating new user instances (because email address is ``NOT NULL`` in most Django DBs, and often constrained to be unique). Defaults to appending a nonsense email domain to the username.
