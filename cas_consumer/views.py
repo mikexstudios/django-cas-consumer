@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response, get_list_or_404
+from django.shortcuts import get_object_or_404, render_to_response, get_list_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.conf import settings
+from django.contrib import messages
 
 __all__ = ['login', 'logout',]
 
@@ -42,11 +43,11 @@ def login(request):
     if user is not None:
         auth_login(request, user)
         name = user.first_name or user.username
-        message ="Login succeeded. Welcome, %s." % name
-        user.message_set.create(message=message)
+        messages.success(request, 'Login successful.')
         return HttpResponseRedirect(next)
     else:
-        return HttpResponseForbidden("Error authenticating with CAS")
+        messages.error(request, 'Error authenticating with CAS.')
+        return redirect(next)
 
 def logout(request, next_page=cas_redirect_on_logout):
     """ Logs the current user out. If *CAS_COMPLETELY_LOGOUT* is true, redirect to the provider's logout page,
