@@ -12,7 +12,6 @@ from django.contrib import messages
 
 __all__ = ['login', 'logout',]
 
-service = settings.CAS_SERVICE
 cas_base = settings.CAS_BASE
 cas_login = cas_base + settings.CAS_LOGIN_URL
 cas_validate = cas_base + settings.CAS_VALIDATE_URL
@@ -32,6 +31,12 @@ def login(request):
     """
     ticket = request.GET.get(settings.CAS_TICKET_LABEL, None)
     next = request.GET.get('next_page', cas_next_default)
+
+    #If CAS_SERVICE setting is not set, automatically set the service url based
+    #on request host. Since we don't provide a location, it will automatically
+    #be set to this login view url along with all query strings.
+    service = getattr(settings, 'CAS_SERVICE', request.build_absolute_uri())
+
     if ticket is None:
         params = settings.CAS_EXTRA_LOGIN_PARAMS
         params.update({settings.CAS_SERVICE_LABEL: service})

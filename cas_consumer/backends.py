@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 
 __all__ = ['CASBackend']
 
-service = settings.CAS_SERVICE
 cas_base = settings.CAS_BASE
 cas_login = cas_base + settings.CAS_LOGIN_URL
 cas_validate = cas_base + settings.CAS_VALIDATE_URL
